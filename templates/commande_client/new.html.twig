@@ -2,14 +2,11 @@
 
 {% block body %}
     <h1>Confirm Order</h1>
-
+    <p>Please enter the verification code sent to your email to confirm your order:</p>
     <form method="post" action="{{ path('app_confirm_order', {'id': commande.id}) }}">
-        <div class="form-group">
-            <label for="verificationCode">Enter Verification Code:</label>
-            <input type="text" id="verificationCode" name="verificationCode" class="form-control" required>
-            <!-- Add a hidden input field to store the encoded verification code -->
-            <input type="hidden" id="storedVerificationCode" name="storedVerificationCode" value="{{ verificationCode|url_encode }}">
-        </div>
-        <button type="submit" class="btn btn-primary">Confirm Order</button>
+        <input  type="hidden" name="storedVerificationCode" value="{{ verificationCode }}" />
+        <label  for="verificationCode">Verification Code:</label>
+        <input class="form-control"  type="text" id="verificationCode" name="verificationCode" required />
+        <button class="btn btn-primary" type="submit">Confirm Order</button>
     </form>
 {% endblock %}

@@ -10,6 +10,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+
+use App\Repository\CommandeRepository;
+
+ 
+use Dompdf\Dompdf;
+use Dompdf\Options;
+
 #[Route('/commande/admin')]
 class CommandeAdminController extends AbstractController
 {
@@ -85,4 +92,46 @@ class CommandeAdminController extends AbstractController
 
         return $this->redirectToRoute('app_commande_admin_index', [], Response::HTTP_SEE_OTHER);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+    #[Route('/commande/pdf', name: 'app_commande_pdf', methods: ['GET'])]
+    public function generatePdf(CommandeRepository $commandeRepository): Response
+    {
+        // Fetch command information from the repository
+        $commandes = $commandeRepository->findAll();
+        // Render the commandes into a PDF using a template
+        $pdf = $this->renderView('commande_admin/commandes_pdf.html.twig', [
+            'commandes' => $commandes,
+        ]);
+    
+        // Create a new instance of Dompdf
+        $dompdf = new Dompdf();
+        $dompdf->loadHtml($pdf);
+    
+        // Set paper size and rendering options
+        $dompdf->setPaper('A4', 'portrait');
+    
+        // Render the PDF
+        $dompdf->render();
+    
+        // Stream the PDF response
+        return new Response(
+            $dompdf->output(),
+            Response::HTTP_OK,
+            [
+                'Content-Type' => 'application/pdf',
+            ]
+        );
+    }
+
 }

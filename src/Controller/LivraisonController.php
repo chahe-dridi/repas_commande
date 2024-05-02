@@ -12,6 +12,10 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints\Date;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+use Dompdf\Dompdf;
+use Dompdf\Options;
+
+
 class LivraisonController extends AbstractController
 {
     #[Route('/livraisons', name: 'app_commande')]
@@ -47,5 +51,50 @@ class LivraisonController extends AbstractController
 
         return new Response('Livraison created!', Response::HTTP_CREATED);
     
+}
+
+
+
+
+
+
+
+
+#[Route('/livraisons/pdf', name: 'app_livraison_pdf', methods: ['GET'])]
+public function generatePdf(EntityManagerInterface $entityManager): Response
+{
+    // Fetch livraison information from the repository
+    $livraisons = $entityManager
+        ->getRepository(Livraison::class)
+        ->findAll();
+
+    // Render the livraisons into a PDF using a template
+    $pdf = $this->renderView('livraison/livraison_pdf.html.twig', [
+        'livraisons' => $livraisons,
+    ]);
+
+    // Create a new instance of Dompdf
+    $options = new Options();
+    $options->set('isHtml5ParserEnabled', true);
+    $options->set('isPhpEnabled', true);
+    $dompdf = new Dompdf($options);
+
+    // Load HTML content into Dompdf
+    $dompdf->loadHtml($pdf);
+
+    // Set paper size and rendering options
+    $dompdf->setPaper('A4', 'portrait');
+
+    // Render the PDF
+    $dompdf->render();
+
+    // Stream the PDF response
+    return new Response(
+        $dompdf->output(),
+        Response::HTTP_OK,
+        [
+            'Content-Type' => 'application/pdf',
+        ]
+    );
 }
 }

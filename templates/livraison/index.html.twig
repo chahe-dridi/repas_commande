@@ -3,12 +3,18 @@
 {% block title %}Create Livraison{% endblock %}
 
 {% block body %}
+
+
+
+
     <h1>List Des Livraisons</h1>
     <!-- Search form -->
     <form id="searchForm" class="form-inline my-2 my-lg-0">
-        <input id="livraisonSearch" class="form-control mr-sm-2" type="search" placeholder="Search by Date" aria-label="Search">
+        <input id="livraisonSearch" class="form-control mr-sm-2" type="search" placeholder="Search by Addresse" aria-label="Search">
     </form>
     <br>
+     <a href="{{ path('app_livraison_pdf') }}" class="btn btn-success btn-lg">PDF</a>
+   
     <div class="container">
         <table class="table">
             <thead>
@@ -25,6 +31,7 @@
                     <th scope="row">{{ livraison.id }}</th>
                     <td>{{ livraison.date|date('Y-m-d H:i:s') }}</td>
                     <td>{{ livraison.adresse }}</td>
+                    <td>{{ livraison.user.id }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

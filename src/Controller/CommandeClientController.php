@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 
-
+use App\Entity\Repas;
 
 
 
@@ -19,8 +19,7 @@ use Symfony\Component\Mailer\Mailer ;
 use Symfony\Component\Mailer\Transport;
 use Symfony\Component\Mime\Email;
 
-
-
+ 
 
 
 #[Route('/commande/client')]
@@ -32,9 +31,19 @@ class CommandeClientController extends AbstractController
         $commandes = $entityManager
             ->getRepository(Commande::class)
             ->findAll();
-
+    
+        // Fetch related Repas entities for each Commande
+        $repas = [];
+        foreach ($commandes as $commande) {
+            $repasId = $commande->getIdRepas();
+            $repas[] = $entityManager
+                ->getRepository(Repas::class)
+                ->find($repasId);
+        }
+    
         return $this->render('commande_client/index.html.twig', [
             'commandes' => $commandes,
+            'repas' => $repas, // Pass the fetched Repas entities to the template
         ]);
     }
 
@@ -112,6 +121,10 @@ public function sendConfirmationEmail(Commande $commande): Response
         $user = $this->getUser();
         $userEmail = $user->getEmail();
 
+
+
+        
+    
         // Email content with the verification code
         $htmlContent = "
             <html>
@@ -125,12 +138,14 @@ public function sendConfirmationEmail(Commande $commande): Response
                     <h2>Dear {$commande->getUser()->getEmail()},</h2>
                     <p>Your order confirmation:</p>
                     <ul>
-                        <li><strong>Order ID:</strong> {$commande->getId()}</li>
+                        <li><strong>Order Ticket:</strong> {$commande->getId()}</li>
+                        <li><strong>PRIX  :</strong> {$commande->getPrix()}</li>
                         <!-- Include other order details as needed -->
                     </ul>
-                    <p class='thank-you'>Thank you for choosing us.</p>
+                   
                     <p>Your verification code is: <strong>$verificationCode</strong></p>
-                    <p>Best regards,<br> Your Team</p>
+                    <p>Best regards,<br> Make sure to type the code correctly!</p>
+                    <p class='thank-you'>Thank you for choosing us.</p>
                 </div>
             </body>
             </html>
@@ -143,7 +158,7 @@ public function sendConfirmationEmail(Commande $commande): Response
         $email = (new Email())
             ->from('tester44.tester2@gmail.com')
             ->to($userEmail)
-            ->subject('reservation complete')
+            ->subject('reservation Confirmation')
             ->html($htmlContent);
 
         // Send the email
@@ -193,16 +208,12 @@ public function confirmOrder(Request $request, Commande $commande): Response
         $this->addFlash('error', 'Incorrect verification code. Please try again.');
         return $this->redirectToRoute('app_confirm_order_verification', [
             'id' => $commande->getId(),
-            'verificationCode' => $storedVerificationCode,
         ]);
     }
 
     // Redirect back to the order index page
     return $this->redirectToRoute('app_commande_client_index');
 }
-
-
-
 
 
 
