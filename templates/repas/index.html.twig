@@ -1,0 +1,31 @@
+
+{% extends '/frontOffice/base.html.twig' %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<div class="example-wrapper">
+    <h1>Commandez ce Repas</h1>
+    <div class="card" style="width: 20rem;">
+  <img class="card-img-top" style="height : 200px"  src="https://fastly.picsum.photos/id/816/200/300.jpg?hmac=4O5XSGjimzcjZYOXpVb_--v3rGzmS-3chmG2L1MS-mc"  alt="Card image cap">
+  <div class="card-body">
+    <h5 class="card-title">{{repas.nom}}</h5>
+    <p class="card-text">{{repas.type}}</p>
+     <form id="profileForm" action="/commandesetlivraison/{{repas.id}}" method="POST" enctype="multipart/form-data">
+        
+        <div class="form-group">
+            <label for="adresse">Votre Adresse:</label>
+            <input type="text" id="adresse" name="adresse" class="form-control" value="{{adresse}}">
+        </div>
+       
+        <button type="submit" class="btn btn-success"   >Commander</button>
+    </form>
+  </div>
+</div>
+
+   </div>
+{% endblock %}
+

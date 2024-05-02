@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+
+<title>Hello CommandeController!</title>
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<div class="example-wrapper">
+    <h1>Hello {{ controller_name }}! ✅</h1>
+ {% for commande in commandes %}
+    <div>
+    prix
+        <h3>{{ commande.prix }}</h3>
+        etat
+        <p>{{ commande.etat }}</p>
+        <p>{{ commande.adresse }}</p>
+        <!-- Render other properties of the commande object as needed -->
+    </div>
+{% endfor %}
+
+</div>
+{% endblock %}

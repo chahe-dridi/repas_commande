@@ -1,0 +1,50 @@
+   {% extends '/frontOffice/base.html.twig' %}
+
+{% block title %}Reset Password!{% endblock %}
+
+{% block body %}
+<div class="container"> 
+    <h1>Reset Password</h1>
+    {{ form_start(form) }}
+    {% if form_errors(form.recaptcha) or form_errors(form.email)  %}
+     <div class="alert alert-danger">
+        <ul>
+        {% if  form_errors(form.recaptcha) %}
+          {{ form_errors(form.recaptcha) }}
+          {% endif %}
+             {% if  form_errors(form.email) %}
+          {{ form_errors(form.email) }}
+          {% endif %}
+           
+           
+        </ul>
+    </div> 
+
+    {% endif %}
+  {% for flashSuccess in app.flashes('success') %}
+      <div class="alert alert-success" id = "error-flash-success" >{{ flashSuccess }}
+        
+        </div>
+    {% endfor %}
+
+  {% for flashError in app.flashes('error') %}
+      <div class="alert alert-danger" id = "error-flash-message" >{{ flashError }}
+         <script>
+        // Add a timeout to hide the success flash message after 3 seconds
+      
+    </script>
+        </div>
+    {% endfor %}
+<div class="form-group col-6">
+        {{ form_label(form.email) }}
+        {{ form_widget(form.email, {'attr': {'class': 'form-control custom-input', 'placeholder': 'Email'}}) }}
+    </div>
+    
+        <div class="form-group col-6" >
+        {{ form_row(form.recaptcha) }}
+
+    <button type="submit" class="btn btn-primary" style="background-color: #40ba37; margin-top:20%">Reset</button>
+    </div>
+{{form_end(form)}}
+</div>
+{% endblock %}

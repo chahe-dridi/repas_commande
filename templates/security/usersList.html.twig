@@ -1,0 +1,87 @@
+{% extends 'backOffice/base.html.twig' %}
+
+{% block title %}Users List{% endblock %}
+
+{% block body %} 
+ <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Users List</h3>
+              </div>
+              <div class="row">
+                <div class="col-md-8 offset-md-2">
+                    <form action="/search-users" method="POST">
+                        <div class="input-group">
+                            <input type="search" id="searchValue" name="searchValue" class="form-control form-control-lg" placeholder="Type your keywords here">
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-lg btn-default">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+              <div class="card-body">
+                <table id="example2" class="table table-bordered table-hover">
+                  <thead>
+                  <tr>
+                    <th>Email</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Phone Number</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  {% for user in users %}
+                <tr>
+                    <td>{{ user.email }}</td>
+                    <td>{{ informationPersonnelles[user.id].nom | default('-') }}</td>
+                    <td>{{ informationPersonnelles[user.id].prenom | default('-') }}</td>
+                    <td>{{ informationPersonnelles[user.id].phone | default('-') }}</td>
+                    <td>{{ user.role }}</td>
+
+                     <td style="color: {{ user.isActive ? 'green' : 'red' }}">
+                        {{ user.isActive ? 'Active' : 'Inactive' }}
+                    </td>
+                   <td>
+                        <a href="{{ path('toggle_user_active', {'id': user.id}) }}">
+                            {% if user.isActive %}
+                                <i class="fa fa-lock" style="color: red;"></i>
+                            {% else %}
+                                <i class="fa fa-unlock" style="color: green;"></i>
+                            {% endif %}
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+                  </tbody>
+                  <tfoot> 
+                  <tr>
+                      <th>Email</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Phone Number</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+
+           
+          </div>
+        </div>
+      </div>
+    </section>
+{% endblock %}
+{% block js %} 
+
+{% endblock %}

@@ -1,0 +1,91 @@
+{% extends '/backOffice/base.html.twig' %}
+
+{% block body %}
+    <h1>Commande index</h1>
+
+    <!-- Search form -->
+    <form id="searchForm" class="form-inline my-2 my-lg-0">
+        <input id="repasIdSearch" class="form-control mr-sm-2" type="search" placeholder="Search by Meal ID" aria-label="Search">
+    </form>
+    <br>
+
+    <!-- Buttons for sorting -->
+    <div class="container">
+        <div class="btn-group" role="group" aria-label="Sort by Price">
+            <button id="sortByPriceAsc" class="btn btn-primary">Price up</button>
+            <button id="sortByPriceDesc" class="btn btn-primary">Price down</button>
+        </div>
+    </div>
+    <br>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Prix</th>
+                <th>Etat</th>
+                <th>IdRepas</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="commandeListContainer">
+        {% for commande in commandes %}
+            <tr class="commande-row">
+                <td>{{ commande.id }}</td>
+                <td>{{ commande.prix }}</td>
+                <td>{{ commande.etat }}</td>
+                <td>{{ commande.idRepas }}</td>
+                <td>
+                    <a    href="{{ path('app_commande_admin_show', {'id': commande.id}) }}">show</a>
+                    <a href="{{ path('app_commande_admin_edit', {'id': commande.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">No records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_commande_admin_new') }}">Create new</a>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Search functionality
+            $("#repasIdSearch").on("keyup", function() {
+                var searchQuery = $(this).val().toLowerCase();
+                $(".commande-row").filter(function() {
+                    $(this).toggle($(this).find('td:eq(3)').text().toLowerCase().indexOf(searchQuery) > -1);
+                });
+            });
+
+            // Sorting by price ascending
+            $("#sortByPriceAsc").click(function() {
+                var rows = $('#commandeListContainer tr').get();
+                rows.sort(function(a, b) {
+                    var priceA = parseFloat($(a).find('td:eq(1)').text());
+                    var priceB = parseFloat($(b).find('td:eq(1)').text());
+                    return priceA - priceB;
+                });
+                $.each(rows, function(index, row) {
+                    $('#commandeListContainer').append(row);
+                });
+            });
+
+            // Sorting by price descending
+            $("#sortByPriceDesc").click(function() {
+                var rows = $('#commandeListContainer tr').get();
+                rows.sort(function(a, b) {
+                    var priceA = parseFloat($(a).find('td:eq(1)').text());
+                    var priceB = parseFloat($(b).find('td:eq(1)').text());
+                    return priceB - priceA;
+                });
+                $.each(rows, function(index, row) {
+                    $('#commandeListContainer').append(row);
+                });
+            });
+        });
+    </script>
+{% endblock %}

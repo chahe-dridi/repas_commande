@@ -1,0 +1,50 @@
+{% extends '/frontOffice/base.html.twig' %}
+
+{% block title %}Register!{% endblock %}
+
+{% block body %}
+<div class="container"> 
+    <h1>Register</h1>
+    {{ form_start(registrationForm) }}
+{% if form_errors(registrationForm.recaptcha) or form_errors(registrationForm.email) or form_errors(registrationForm.plainPassword) or form_errors(registrationForm.role) %}
+   <div class="alert alert-danger">
+        <ul>
+        {% if  form_errors(registrationForm.recaptcha) %}
+          {{ form_errors(registrationForm.recaptcha) }}
+          {% endif %}
+             {% if  form_errors(registrationForm.email) %}
+          {{ form_errors(registrationForm.email) }}
+          {% endif %}
+            {% if  form_errors(registrationForm.plainPassword) %}
+          {{ form_errors(registrationForm.plainPassword) }}
+          {% endif %}
+            {% if  form_errors(registrationForm.role) %}
+          {{ form_errors(registrationForm.role) }}
+          {% endif %}
+        </ul>
+    </div> 
+    {% endif %}
+    <div class="form-group col-6">
+        {{ form_label(registrationForm.email) }}
+        {{ form_widget(registrationForm.email, {'attr': {'class': 'form-control custom-input', 'placeholder': 'Email'}}) }}
+    </div>
+    <div class="form-group col-6" >
+        {{ form_label(registrationForm.plainPassword, 'Password') }}
+        {{ form_widget(registrationForm.plainPassword, {'attr': {'class': 'form-control custom-input', 'placeholder': 'Verification Code'}}) }}
+      </div>
+    <div class="form-group col-6">
+        <label for="role" class="form-label">Role</label>
+        {{ form_widget(registrationForm.role, {'attr': {'class': 'form-control'}}) }}
+    </div>
+    
+   {{ form_row(registrationForm.recaptcha) }}
+    {# must be the same name of this put on the FormBuilder #}
+
+    {# That will display the error of the captcha to user #}
+     <div class="form-group col-6" >
+     
+    <button type="submit" class="btn btn-primary" style="background-color: #40ba37; margin-top:20%">Register</button>
+    </div>
+    {{ form_end(registrationForm) }}
+</div>
+{% endblock %}

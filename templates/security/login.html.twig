@@ -1,0 +1,56 @@
+{% extends '/frontOffice/base.html.twig' %}
+
+{% block title %}Log in!{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        /* Custom CSS to adjust input field size */
+        .custom-input {
+            width: 300px; /* Adjust the width as needed */
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="container col-6" >
+    <form method="post" class="mx-auto"> 
+     {% for flashError in app.flashes('error') %}
+      <div class="alert alert-danger" id = "error-flash-message" >{{ flashError }}
+         <script>
+        // Add a timeout to hide the success flash message after 3 seconds
+        setTimeout(function() {
+            var successFlashMessage = document.getElementById('error-flash-message');
+            if (successFlashMessage) {
+                successFlashMessage.remove();
+            }
+        }, 1500);
+    </script>
+        </div>
+    {% endfor %}
+        {% if error %}
+            <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+        {% endif %}
+
+        
+
+        <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+        <div class="form-group col-6">
+            <label for="inputEmail">Email</label>
+            <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control custom-input" autocomplete="email"  autofocus>
+        </div>
+        <div class="form-group col-6">
+            <label for="inputPassword">Password</label>
+            <input type="password" name="password" id="inputPassword" class="form-control custom-input" autocomplete="current-password" >
+        </div>
+
+        <input type="hidden" name="_csrf_token"
+               value="{{ csrf_token('authenticate') }}">
+        <div class="form-group col-6">
+                <button class="btn btn-lg btn-primary" type="submit" style="background-color: #40ba37;">
+                    Sign in
+                </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

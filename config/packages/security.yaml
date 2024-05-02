@@ -1,0 +1,44 @@
+security:
+    encoders:
+        App\Entity\User:
+            algorithm: bcrypt
+
+    # Enable the authenticator manager
+    enable_authenticator_manager: true
+
+    # Configure the password hashers
+    password_hashers:
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+
+    # Define the user provider
+    providers:
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: email
+
+    # Configure firewalls
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        main:
+            lazy: true
+            provider: app_user_provider
+            custom_authenticator: App\Security\AppCustomAuthenticator
+            access_denied_handler: App\Security\CustomAccessDeniedHandler
+            # Configure logout
+            logout:
+                path: app_logout
+
+            # Configure remember me
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 604800 # 1 week
+                path: /
+                always_remember_me: true
+
+    # Access control configuration
+    access_control:
+    

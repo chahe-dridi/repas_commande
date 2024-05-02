@@ -1,0 +1,48 @@
+{% extends '/backOffice/base.html.twig' %}
+
+{% block title %}Create Livraison{% endblock %}
+
+{% block body %}
+    <h1>List Des Livraisons</h1>
+    <!-- Search form -->
+    <form id="searchForm" class="form-inline my-2 my-lg-0">
+        <input id="livraisonSearch" class="form-control mr-sm-2" type="search" placeholder="Search by Date" aria-label="Search">
+    </form>
+    <br>
+    <div class="container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Addresse</th>
+                    <th scope="col">User ID</th>
+                </tr>
+            </thead>
+            <tbody id="livraisonListContainer">
+                {% for livraison in livraisons %}
+                <tr class="livraison-row">
+                    <th scope="row">{{ livraison.id }}</th>
+                    <td>{{ livraison.date|date('Y-m-d H:i:s') }}</td>
+                    <td>{{ livraison.adresse }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+   
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("#livraisonSearch").on("keyup", function() {
+                var searchQuery = $(this).val().toLowerCase();
+                $(".livraison-row").filter(function() {
+                    // Convert date string to lowercase for comparison
+                    var dateString = $(this).find("td:eq(1)").text().toLowerCase();
+                    // If the search query matches the date string, show the row; otherwise, hide it
+                    $(this).toggle(dateString.indexOf(searchQuery) > -1);
+                });
+            });
+        });
+    </script>
+{% endblock %}

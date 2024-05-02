@@ -1,0 +1,141 @@
+﻿<UserControl x:Class="FoodRecipes.CustomView.LocalMediaPlayer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:FoodRecipes.CustomView"
+              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid Name="mainContainer">
+        <MediaElement x:Name="videoContainerFromLocal"
+                      MediaOpened="videoContainerFromLocal_Opened"
+                      MediaEnded="videoContainerFromLocal_Ended"
+                      LoadedBehavior="Manual"
+                      UnloadedBehavior="Stop"
+                      MediaFailed="videoContainerFromLocal_MediaFailed"
+                      Width="{Binding ActualWidth, ElementName=mainContainer}"
+                      Height="{Binding ActualHeight, ElementName=mainContainer}" Volume="1"/>
+
+        <Button Name="mediaControlContainer"
+                materialDesign:RippleAssist.IsDisabled="True"
+                Style="{StaticResource ImagePickerFrameButton}"
+                BorderBrush="Transparent"
+                VerticalContentAlignment="Bottom"
+                Width="{Binding ActualWidth, ElementName=mainContainer}"
+                Height="{Binding ActualHeight, ElementName=mainContainer}">
+
+            <Grid Name="buttonContainter"
+                  Background="#70fefefe"
+                  Height="70"
+                  Width="{Binding ActualWidth, ElementName=mainContainer}">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="4*"/>
+                </Grid.RowDefinitions>
+
+                <Slider Name="videoProgressSlider"
+                        LostMouseCapture="videoProgressSlider_LostMouseCapture"
+                        Grid.RowSpan="2"
+                        Minimum="{Binding StartTime}"
+                        Maximum="86400"
+                        Value="{Binding CurrentTime}"
+                        VerticalAlignment="Top"
+                        Margin="8, 8, 8, 0"/>
+
+                   
+
+                <StackPanel Name="leftControlContainer"
+                            Grid.Row="1"
+                            Margin="12, 0, 0, 0"
+                            HorizontalAlignment="Left"
+                            Orientation="Horizontal">
+
+                    <Button Name="pauseButon"
+                            Click="pauseButon_Click"
+                        Style="{StaticResource WindowOptionsButton}"
+                        Width="32"
+                        Height="32">
+
+                        <Image Name="iconPause"
+                           Width="32"
+                           Height="32"
+                           RenderOptions.BitmapScalingMode="HighQuality"
+                           Source="{StaticResource IconBluePause }"/>
+                    </Button>
+
+                    <Button Name="muteButton"
+                            Click="muteButton_Click"
+                            Margin="4, 0, 0, 0"
+                        Style="{StaticResource WindowOptionsButton}"
+                        Width="32"
+                        Height="32">
+
+                        <Image Name="iconMute"
+                           Width="32"
+                           Height="32"
+                           RenderOptions.BitmapScalingMode="HighQuality"
+                           Source="{StaticResource IconBlueSoundOn}"/>
+                    </Button>
+
+                    <Slider Name="volumeSlider"
+                            ValueChanged="volumeSlider_ValueChanged"
+                            VerticalAlignment="Center"
+                            Width="100"
+                            Margin="4, 0, 0, 0"
+                            Minimum="0"
+                            Maximum="1"
+                            Value="1"
+                            Orientation="Horizontal"/>
+                </StackPanel>
+
+                <StackPanel Name="timeContainer"
+                            VerticalAlignment="Center"
+                            Orientation="Horizontal"
+                            Grid.Row="1"
+                            HorizontalAlignment="Right"
+                            Margin="0, 0, 12, 0">
+
+                    <!-- Binding here-->
+                    <TextBlock Name="currentTimeTextBlock"
+                               Text="0:0"
+                               FontSize="16"
+                               Style="{StaticResource RegularText}"/>
+
+                    <TextBlock 
+                               Margin="8, 0, 0, 0"
+                               Text="/"
+                               FontSize="16"
+                               Style="{StaticResource RegularText}"/>
+
+                    <!-- Binding here-->
+                    <TextBlock Name="totalTimeTextBlock"
+                               Margin="8, 0, 0, 0"
+                               Text="10:22"
+                               FontSize="16"
+                               Style="{StaticResource RegularText}"/>
+
+                </StackPanel>
+                
+                <Button Name="fullScreenButton"
+                        Visibility="Hidden"
+                        Click="fullScreenButton_Click"
+                        Grid.Row="1"
+                        HorizontalAlignment="Right"
+                        Margin="0, 0, 8, 0"
+                        Style="{StaticResource WindowOptionsButton}"
+                        Width="32"
+                        Height="32">
+
+                    <Image Name="iconFullScreen"
+                           Width="32"
+                           Height="32"
+                           RenderOptions.BitmapScalingMode="HighQuality"
+                           Source="{StaticResource IconBlueFullScr}"/>
+                </Button>
+
+            </Grid>
+        </Button>
+    </Grid>
+</UserControl>
