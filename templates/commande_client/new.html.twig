@@ -1,0 +1,15 @@
+{% extends '/frontOffice/base.html.twig' %}
+
+{% block body %}
+    <h1>Confirm Order</h1>
+
+    <form method="post" action="{{ path('app_confirm_order', {'id': commande.id}) }}">
+        <div class="form-group">
+            <label for="verificationCode">Enter Verification Code:</label>
+            <input type="text" id="verificationCode" name="verificationCode" class="form-control" required>
+            <!-- Add a hidden input field to store the encoded verification code -->
+            <input type="hidden" id="storedVerificationCode" name="storedVerificationCode" value="{{ verificationCode|url_encode }}">
+        </div>
+        <button type="submit" class="btn btn-primary">Confirm Order</button>
+    </form>
+{% endblock %}

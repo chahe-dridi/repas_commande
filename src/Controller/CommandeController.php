@@ -48,7 +48,9 @@ class CommandeController extends AbstractController
         $entityManager->persist($livraison);
         $entityManager->flush();
 
-        return new Response('Livraison created!', Response::HTTP_CREATED);
+      //  return new Response('Livraison created!', Response::HTTP_CREATED);
+
+        return $this->redirectToRoute('app_home');
     
 }
     

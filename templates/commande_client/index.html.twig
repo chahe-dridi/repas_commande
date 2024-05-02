@@ -1,0 +1,51 @@
+{% extends '/frontOffice/base.html.twig' %}
+
+{% block body %}
+    {% if verificationCode is defined %}
+        <h1>Confirm Order</h1>
+
+        <form method="post" action="{{ path('app_confirm_order', {'id': commande.id}) }}">
+            <div class="form-group">
+                <label for="verificationCode">Enter Verification Code:</label>
+                <input type="text" id="verificationCode" name="verificationCode" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Confirm Order</button>
+        </form>
+    {% else %}
+        <h1>My Commande </h1>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Price</th>
+                    <th>States</th>
+                    <th>Repas Name</th> <!-- Update table header -->
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for commande in commandes %}
+                <tr>
+                    <td>{{ commande.prix }}</td>
+                    <td>{{ commande.etat }}</td>
+                     <td>
+                        {% if commande.etat == 'En cours' %}
+                            <form method="post" action="{{ path('app_send_confirmation_email', {'id': commande.id}) }}">
+                                <button type="submit" class="btn btn-primary">Send Confirmation Email</button>
+                            </form>
+                        {% endif %}
+                        <a href="{{ path('app_commande_client_show', {'id': commande.id}) }}">show</a>
+                        <a href="{{ path('app_commande_client_edit', {'id': commande.id}) }}">edit</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5">no records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <a href="{{ path('app_commande_client_new') }}">Create new</a>
+    {% endif %}
+{% endblock %}

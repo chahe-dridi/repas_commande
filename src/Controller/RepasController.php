@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use SensioLabs\Security\SecurityChecker;
-
+use Symfony\Component\Mailer\MailerInterface;
 use App\Entity\User;
 
 
@@ -39,7 +39,7 @@ class RepasController extends AbstractController
 
 
 
-
+ 
     #[Route('/repas/{id}', name: 'app_repas')]
     public function details(int $id, EntityManagerInterface $entityManager): Response
     {
@@ -69,56 +69,58 @@ class RepasController extends AbstractController
     
         $user = $this->getUser();
         $userEmail = $user->getEmail();
-    
+
+        $verificationCode = str_pad(mt_rand(0, 999999), 6, '0', STR_PAD_LEFT);
+
         $htmlContent = "
         <html>
         <head>
-            <style>
-                body {
-                    font-family: Arial, sans-serif;
-                    line-height: 1.6;
-                    background-color: #f4f4f4;
-                    padding: 20px;
-                    margin: 0;
-                }
-                .container {
-                    max-width: 600px;
-                    margin: 0 auto;
-                    background-color: #fff;
-                    padding: 20px;
-                    border-radius: 8px;
-                    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-                }
-                h2 {
-                    color: #333;
-                    font-size: 24px;
-                    margin-bottom: 20px;
-                }
-                p {
-                    margin-bottom: 15px;
-                    font-size: 16px;
-                }
-                ul {
-                    list-style: none;
-                    padding: 0;
-                    margin-bottom: 20px;
-                }
-                li {
-                    margin-bottom: 10px;
-                    font-size: 16px;
-                }
-                strong {
-                    font-weight: bold;
-                }
-                .thank-you {
-                    font-size: 16px;
-                    margin-top: 20px;
-                }
-            </style>
+        <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f4f4f4;
+            padding: 20px;
+            margin: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        p {
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 20px;
+        }
+        li {
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        strong {
+            font-weight: bold;
+        }
+        .thank-you {
+            font-size: 16px;
+            margin-top: 20px;
+        }
+    </style>
         </head>
         <body>
             <div class='container'>
-                <h2>Dear {$user->getEmail()}  ,</h2>
+                <h2>Dear {$user->getEmail()},</h2>
                 <p>Here are the details of your meal reservation:</p>
                 <ul>
                     <li><strong>Meal Name:</strong> $mealName</li>
@@ -126,11 +128,12 @@ class RepasController extends AbstractController
                     <!-- Include other meal and recipe details as needed -->
                 </ul>
                 <p class='thank-you'>Thank you for choosing us.</p>
+                <p>Your verification code is: <strong>$verificationCode</strong></p>
                 <p>Best regards,<br> Your Team</p>
             </div>
         </body>
         </html>
-        ";
+    ";
     
         $transport = Transport::fromDsn('smtp://tester44.tester2@gmail.com:hpevdqbvclzebhxa@smtp.gmail.com:587');
         $mailer = new Mailer($transport);
@@ -153,7 +156,8 @@ class RepasController extends AbstractController
     }
     
         
-    
+ 
+ 
     
 
     
